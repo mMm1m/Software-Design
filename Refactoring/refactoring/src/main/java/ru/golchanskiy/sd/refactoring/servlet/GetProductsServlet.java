@@ -2,6 +2,7 @@ package main.java.ru.golchanskiy.sd.refactoring.servlet;
 
 import main.java.ru.golchanskiy.sd.refactoring.dao.ProductDAO;
 import main.java.ru.golchanskiy.sd.refactoring.entity.Product;
+import main.java.ru.golchanskiy.sd.refactoring.html.formatting.ProductHtmlFormatting;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,17 +16,16 @@ import java.util.List;
 
 public class GetProductsServlet extends HttpServlet {
     ProductDAO productDAO;
-    public GetProductsServlet(ProductDAO productDAO){
+    ProductHtmlFormatting htmlFormatting;
+    public GetProductsServlet(ProductDAO productDAO, ProductHtmlFormatting formatting){
         this.productDAO = productDAO;
+        this.htmlFormatting = formatting;
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        StringBuilder ans = new StringBuilder();
+        String ans;
         try {
-             List<Product> list = productDAO.getAllProducts();
-             for(Product a : list){
-                 ans.append(a.getName());
-             }
+            ans = htmlFormatting.productsToHtml(productDAO.getAllProducts());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

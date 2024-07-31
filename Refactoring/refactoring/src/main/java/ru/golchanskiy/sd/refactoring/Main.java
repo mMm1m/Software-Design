@@ -2,6 +2,7 @@ package main.java.ru.golchanskiy.sd.refactoring;
 
 import main.java.ru.golchanskiy.sd.refactoring.dao.ProductDAO;
 import main.java.ru.golchanskiy.sd.refactoring.entity.Product;
+import main.java.ru.golchanskiy.sd.refactoring.html.formatting.ProductHtmlFormatting;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -37,7 +38,7 @@ public class Main {
 
         ProductDAO productDAO = new ProductDAO();
         context.addServlet(new ServletHolder(new AddProductServlet(productDAO)), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet(productDAO)),"/get-products");
+        context.addServlet(new ServletHolder(new GetProductsServlet(productDAO, new ProductHtmlFormatting())),"/get-products");
         context.addServlet(new ServletHolder(new QueryServlet()),"/query");
 
         server.start();

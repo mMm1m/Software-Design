@@ -39,16 +39,10 @@ public class ProductDAO {
         try (Connection c = getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            //response.getWriter().println("<html><body>");
             List<T> list = new ArrayList<>();
             while (rs.next()) {
-                String  name = rs.getString("name");
-                int price  = rs.getInt("price");
                 list.add(sqlFunction.apply(rs));
-                //response.getWriter().println(name + "\t" + price + "</br>");
             }
-           // response.getWriter().println("</body></html>");
-
             rs.close();
             stmt.close();
             return list;

@@ -22,7 +22,7 @@ public class GetProductsServlet extends HttpServlet {
         this.htmlFormatting = formatting;
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String ans;
         try {
             ans = htmlFormatting.productsToHtml(productDAO.getAllProducts());

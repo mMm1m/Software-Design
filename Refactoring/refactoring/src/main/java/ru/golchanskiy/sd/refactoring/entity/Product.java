@@ -3,7 +3,7 @@ package main.java.ru.golchanskiy.sd.refactoring.entity;
 public class Product {
     private String name = "";
     private long price = 0;
-    Product(String name, long price){
+    public Product(String name, long price){
         this.name = name;
         this.price = price;
     }

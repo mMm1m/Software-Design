@@ -17,7 +17,7 @@ public class ProductHtmlFormatting {
         return wrapBody("<h1>" + message + ": </h1>\n" + productToLocalHtml(product));
     }
 
-    public String valueToHtml(Integer value, String message) {
+    public String valueToHtml(Long value, String message) {
         return wrapBody(message + ": \n" + (value != null ? value : ""));
     }
 

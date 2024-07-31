@@ -1,21 +1,58 @@
 package main.java.ru.golchanskiy.sd.refactoring.servlet;
 
+import jdk.javadoc.internal.doclets.formats.html.HtmlConfiguration;
+import main.java.ru.golchanskiy.sd.refactoring.commands.ProductCommand;
+import main.java.ru.golchanskiy.sd.refactoring.commands.impl.*;
+import main.java.ru.golchanskiy.sd.refactoring.dao.ProductDAO;
+import main.java.ru.golchanskiy.sd.refactoring.html.formatting.ProductHtmlFormatting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * @author akirakozov
  */
 public class QueryServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(QueryServlet.class);
+    ProductDAO productDAO;
+    public QueryServlet(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String command = request.getParameter("command");
+        ProductCommand productCommand;
+        switch(command){
+            case "max":
+                productCommand = new MaxCommand(new ProductHtmlFormatting(), productDAO);
+                break;
+            case "min":
+                productCommand = new MinCommand(new ProductHtmlFormatting(), productDAO);
+            case "sum":
+                productCommand = new SumCommand(new ProductHtmlFormatting(), productDAO);
+                break;
+            case "count":
+                productCommand = new CountCommand(new ProductHtmlFormatting(), productDAO);
+                break;
+            default:
+                productCommand = new UnknownCommand();
+                break;
+        }
+        try{
+            response.getWriter().println(productCommand.toHtml());
+        }
+        catch (IOException | SQLException e){
+            log.error(e.getMessage());
+        }
+        response.setContentType("text/html");
+        response.setStatus(HttpServletResponse.SC_OK);
+
 
         if ("max".equals(command)) {
             try {
@@ -105,8 +142,6 @@ public class QueryServlet extends HttpServlet {
             response.getWriter().println("Unknown command: " + command);
         }
 
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 }
